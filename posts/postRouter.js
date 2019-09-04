@@ -28,8 +28,6 @@ router.get('/:id', (req, res) => {
         error: 'The post could not be retrived from the database'
       })
     })
-
-
 });
 
 router.delete('/:id', (req, res) => {
