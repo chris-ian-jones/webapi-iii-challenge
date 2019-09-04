@@ -85,19 +85,34 @@ router.delete('/:id', (req, res) => {
     .catch(error => {
       console.log(error)
       res.status(500).json({
-        error: `Could not delete user`
+        error: `Could not delete user from database`
       })
     })
 })
 
 router.put('/:id', (req, res) => {
-  
+  const { id } = req.params
+
+  db.update(id, req.body)
+    .then(updatedUser => {
+      res.status(200).json({
+        message: `Users name has been updated`
+      })
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(500).json({
+        error: 'Could not update the user in the database'
+      })
+    })
+
 })
 
 //custom middleware
 
 function validateUserId(req, res, next) {
   const { id } = req.params
+
   db.getById(id)
     .then(user => {
       if (!user) {
