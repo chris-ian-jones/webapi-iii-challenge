@@ -6,11 +6,14 @@ const postsRoutes = require('./posts/postRouter')
 const server = express()
 
 server.use(express.json())
+
+// global/application wide middleware to be used on every endpoint
 server.use(logger)
 
+// on each request this middleware console logs: timestamp, request method & request url
 function logger(req, res, next) {
   console.log(
-    `[${new Date().toISOString()}] ${req.method} to ${req.url} from ${req.headers.host}`
+    `[${new Date().toISOString()}] ${req.method} to ${req.url}`
   )
   next()
 }
