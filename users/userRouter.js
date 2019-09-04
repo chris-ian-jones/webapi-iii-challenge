@@ -5,7 +5,7 @@ const router = express.Router();
 const userDb = require('./userDb')
 const postDb = require('./../posts/postDb')
 
-router.post('/', (req, res) => {
+router.post('/', validateUser, (req, res) => {
   userDb.insert(req.body)
     .then(user => {
       res.status(201).json({
@@ -22,7 +22,6 @@ router.post('/', (req, res) => {
 
 router.post('/:id/posts', (req, res) => {
   const { id } = req.params
-  console.log(req.body.text)
 
   const newPost = {
     text: req.body.text,
@@ -143,7 +142,19 @@ function validateUserId(req, res, next) {
 }
 
 function validateUser(req, res, next) {
+  console.log('req.body: ', req.body.constructor)
 
+  if (Object.keys(req.body).length === 0) {
+    res.status(400).json({
+      message: 'missing user data'
+    })
+  } else if (!req.body.name) {
+    res.status(400).json({
+      message: 'missing required name field'
+    })
+  } else {
+    next()
+  }
 }
 
 function validatePost(req, res, next) {
