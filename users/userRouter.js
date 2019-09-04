@@ -72,11 +72,24 @@ router.get('/:id/posts', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
+  const { id } = req.params
 
+  db.remove(id)
+    .then(deletedUser => {
+      res.status(200).json({
+        deletedUser
+      })
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(500).json({
+        error: `Could not delete user`
+      })
+    })
 });
 
 router.put('/:id', (req, res) => {
-
+  
 });
 
 //custom middleware
