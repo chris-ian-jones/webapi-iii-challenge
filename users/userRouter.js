@@ -27,6 +27,7 @@ router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
     text: req.body.text,
     user_id: parseInt(id)
   }
+
   postDb.insert(newPost)
     .then(createdPost => {
       res.status(201).json({
@@ -52,7 +53,6 @@ router.get('/', (req, res) => {
       res.status(500).json({
         error: 'The users could not be retrieved from the database'
       })
-
     })
 })
 
