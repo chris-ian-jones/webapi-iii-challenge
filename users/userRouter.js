@@ -4,15 +4,6 @@ const router = express.Router();
 
 const db = require('./userDb')
 
-function validateUserId(req, res, next) {
-  if (!req.id) {
-    res.status(400).json({
-      message: 'invalid user id'
-    })
-  }
-  next();
-}
-
 router.post('/', (req, res) => {
   db.insert(req.body)
     .then(user => {
@@ -26,11 +17,11 @@ router.post('/', (req, res) => {
         error: 'There was an error saving the new user to the database'
       })
     })
-});
+})
 
 router.post('/:id/posts', (req, res) => {
 
-});
+})
 
 router.get('/', (req, res) => {
   db.get()
@@ -46,9 +37,9 @@ router.get('/', (req, res) => {
       })
 
     })
-});
+})
 
-router.get('/:id', (req, res) => {
+router.get('/:id', validateUserId, (req, res) => {
   const { id } = req.params
 
   db.getById(id)
@@ -63,7 +54,7 @@ router.get('/:id', (req, res) => {
         error: 'The user could not be retrieved from the database'
       })
     })
-});
+})
 
 router.get('/:id/posts', (req, res) => {
   const { id } = req.params
@@ -80,7 +71,7 @@ router.get('/:id/posts', (req, res) => {
         error: 'Could not retrieve that users posts'
       })
     })
-});
+})
 
 router.delete('/:id', (req, res) => {
   const { id } = req.params
@@ -97,24 +88,32 @@ router.delete('/:id', (req, res) => {
         error: `Could not delete user`
       })
     })
-});
+})
 
 router.put('/:id', (req, res) => {
   
-});
+})
 
 //custom middleware
 
 function validateUserId(req, res, next) {
-
-};
+  const { id } = req.params
+  db.getById(id)
+    .then(user => {
+      if (!user) {
+        res.status(400).json({
+          message: 'invalid user id'
+        })
+      }
+    })
+}
 
 function validateUser(req, res, next) {
 
-};
+}
 
 function validatePost(req, res, next) {
 
-};
+}
 
 module.exports = router;
