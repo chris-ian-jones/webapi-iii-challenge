@@ -5,6 +5,16 @@ const postsRoutes = require('./posts/postRouter')
 
 const server = express()
 
+server.use(express.json())
+server.use(logger)
+
+function logger(req, res, next) {
+  console.log(
+    `[${new Date().toISOString()}] ${req.method} to ${req.url} from ${req.headers.host}`
+  )
+  next()
+}
+
 server.use('/api/users', usersRoutes)
 server.use('/api/posts', postsRoutes)
 
