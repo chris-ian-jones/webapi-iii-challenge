@@ -14,7 +14,18 @@ function validateUserId(req, res, next) {
 }
 
 router.post('/', (req, res) => {
-
+  db.insert(req.body)
+    .then(user => {
+      res.status(201).json({
+        user
+      })
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(500).json({
+        error: 'There was an error saving the new user to the database'
+      })
+    })
 });
 
 router.post('/:id/posts', (req, res) => {
