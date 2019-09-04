@@ -1,4 +1,4 @@
-const express = 'express';
+const express = require('express')
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.post('/:id/posts', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-
+  res.send('Api for /api/users is working...')
 });
 
 router.get('/:id', (req, res) => {
