@@ -2,10 +2,11 @@ const express = require('express')
 
 const router = express.Router();
 
-const db = require('./userDb')
+const userDb = require('./userDb')
+const postDb = require('./../posts/postDb')
 
 router.post('/', (req, res) => {
-  db.insert(req.body)
+  userDb.insert(req.body)
     .then(user => {
       res.status(201).json({
         user
@@ -19,12 +20,29 @@ router.post('/', (req, res) => {
     })
 })
 
-router.post('/:id/posts', validateUserId, (req, res) => {
+router.post('/:id/posts', (req, res) => {
+  const { id } = req.params
+  console.log(req.body.text)
 
+  const newPost = {
+    text: req.body.text,
+    user_id: parseInt(id)
+  }
+  postDb.insert(newPost)
+    .then(createdPost => {
+      res.status(201).json({
+        createdPost
+      })
+    })
+    .catch(error => {
+      res.status(5000).json({
+        error: 'The new post could not be created in the database'
+      })
+    })
 })
 
 router.get('/', (req, res) => {
-  db.get()
+  userDb.get()
     .then(users => {
       res.status(200).json({
         users
@@ -42,7 +60,7 @@ router.get('/', (req, res) => {
 router.get('/:id', validateUserId, (req, res) => {
   const { id } = req.params
 
-  db.getById(id)
+  userDb.getById(id)
     .then(user => {
       res.status(200).json({
         user
@@ -59,7 +77,7 @@ router.get('/:id', validateUserId, (req, res) => {
 router.get('/:id/posts', validateUserId, (req, res) => {
   const { id } = req.params
 
-  db.getUserPosts(id)
+  userDb.getUserPosts(id)
     .then(posts => {
       res.status(200).json({
         posts
@@ -76,7 +94,7 @@ router.get('/:id/posts', validateUserId, (req, res) => {
 router.delete('/:id', validateUserId, (req, res) => {
   const { id } = req.params
 
-  db.remove(id)
+  userDb.remove(id)
     .then(deletedUser => {
       res.status(200).json({
         message: 'User has been deleted'
@@ -93,7 +111,7 @@ router.delete('/:id', validateUserId, (req, res) => {
 router.put('/:id', validateUserId, (req, res) => {
   const { id } = req.params
 
-  db.update(id, req.body)
+  userDb.update(id, req.body)
     .then(updatedUser => {
       res.status(200).json({
         message: `Users name has been updated`
@@ -112,7 +130,7 @@ router.put('/:id', validateUserId, (req, res) => {
 function validateUserId(req, res, next) {
   const { id } = req.params
 
-  db.getById(id)
+  userDb.getById(id)
     .then(user => {
       if (!user) {
         res.status(400).json({
