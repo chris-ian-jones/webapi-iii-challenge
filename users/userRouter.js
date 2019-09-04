@@ -31,14 +31,27 @@ router.get('/', (req, res) => {
     .catch(error => {
       console.log(error)
       res.status(500).json({
-        error: 'The posts could not be retirbved from the database'
+        error: 'The users could not be retrieved from the database'
       })
 
     })
 });
 
 router.get('/:id', (req, res) => {
+  const { id } = req.params
 
+  db.getById(id)
+    .then(user => {
+      res.status(200).json({
+        user
+      })
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(500).json({
+        error: 'The user could not be retrieved from the database'
+      })
+    })
 });
 
 router.get('/:id/posts', (req, res) => {
