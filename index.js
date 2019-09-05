@@ -23,7 +23,7 @@ function logger(req, res, next) {
 server.use('/api/users', usersRoutes)
 server.use('/api/posts', postsRoutes)
 
-server.use('/', (req, res) => res.send('Api is working...'))
+server.use('/', (req, res) => res.send(process.env.SECRET_MESSAGE))
 
 const port = process.env.PORT || 7777
 
