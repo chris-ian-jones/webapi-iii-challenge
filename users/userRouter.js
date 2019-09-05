@@ -160,8 +160,7 @@ function validateUser(req, res, next) {
 }
 
 // validatePost validates the body on a request to create a new post
-// when using express.json() middleware, an empty request body will resolve to an empty object
-// using the Object.keys() method to return an array of the (request body's) object's keys and check if array is empty
+// see comment for function above
 function validatePost(req, res, next) {
   if (Object.keys(req.body).length === 0) {
     res.status(400).json({
